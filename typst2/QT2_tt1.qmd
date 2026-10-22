@@ -1,0 +1,799 @@
+---
+title: "Quarto + Typst + R + TinyTable"
+format: 
+    typst:
+        number-sections: true
+        toc: true
+        lof: true
+        lot: true
+        page-size: a4
+        orientation: landscape
+        margin:
+            x: 1cm
+            y: 1cm
+        code-overflow: wrap
+        code-block-bg: "#F5F5F5"
+execute:
+    echo: true
+    warning: false
+    message: false
+---
+
+## Tiny Table Examples
+
+```{=typst}
+// if not created by yaml
+#outline(
+  title: [List of Figures],
+  target: figure.where(kind: "quarto-float-fig")
+)
+
+#outline(
+  title: [List of Tables],
+  target: figure.where(kind: "quarto-float-tbl")
+)
+```
+
+
+```{=typst}
+#set page(flipped: true)
+```
+
+### TT Eg1
+
+```{r}
+#| message: false
+#| label: tbl-TT-Eg1
+#| tbl-cap: "TT-Eg1"
+
+pacman::p_load(tinytable, dplyr)
+mtcars %>% head() %>% tt(align = 'left')
+print("First Few Rows of mtcars")
+```
+
+Table @tbl-TT-Eg1 for examples of TinyTable outputs with different styles and captions.
+
+### TT Eg2
+```{r}
+#| message: false
+#| label: tbl-TT-Eg2
+#| tbl-cap: "TT-Eg2"
+
+pacman::p_load(tinytable, dplyr)
+mtcars %>%  head() %>%  tt(    .,    caption = "First 6 Rows of mtcars",
+    notes = 'This is a note for the table.',    align = 'center'  )
+```
+@tbl-TT-Eg2 for examples of TinyTable outputs with different styles and captions.
+
+### TT Eg3
+```{r}
+#| message: false
+#| label: tbl-TT-Eg3
+#| tbl-cap: "TT-Eg3"
+
+pacman::p_load(tinytable, dplyr)
+mtcars %>%  head() %>%  tt(.) %>%  style_tt(    justify = "center",
+    font_size = 10,    font_family = "Arial",    caption_font_size = 12,
+    caption_font_family = "Arial",    notes_font_size = 10,    notes_font_family = "Arial"  )
+```
+
+
+Table @tbl-TT-Eg3 for examples of TinyTable outputs with different styles and captions.
+
+
+### TT Eg4
+```{r}
+#| message: false
+#| label: tbl-TT-Eg4
+#| tbl-cap: "TT-Eg4"
+
+pacman::p_load(tinytable, dplyr)
+
+mtcars %>%  head() %>%  tt(.) %>%
+  style_tt(i = 1:3, j = 1:6, background = 'cyan', color = 'red') %>%
+  style_tt(i = 3:6, j = 6:10, background = 'yellow', bold = TRUE) %>%
+  group_tt(j = list('Metrics1' = 1:5, 'Metrics2' = 6:11))
+```
+
+@tbl-TT-Eg4 for examples of TinyTable outputs with different styles and captions.
+
+
+### TT Eg5
+```{r}
+#| message: false
+#| label: tbl-TT-Eg5
+#| tbl-cap: "TT-Eg5"
+
+pacman::p_load(tinytable, dplyr)
+notes2 <- list(
+  a = list(i = 1:2, j = 1, text = 'These are special values'),
+  b = list(i = 3, j = 2:4, text = 'These are other special values')
+)
+mtcars %>% head() %>% tt(., width = .8, height = 2, notes = notes2)
+
+```
+
+
+@tbl-TT-Eg5 - shows how to set the width of the table using the `width` argument and the height of the table using the `height` argument in the `tt()` function.
+
+
+### TT Eg6
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg6
+#| tbl-cap: "TT-Eg6"
+#| tbl-subcap:
+#|  - "TT-Eg6A"
+#|  - "TT-Eg6B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr)
+
+mtcars %>%  head() %>%  tt(.) %>%
+  style_tt(cyl == 6, background = 'green', color = 'black') %>%
+  style_tt(cyl == 4, background = 'yellow', bold = TRUE) #%>% style_tt(mpg>20, bold=TRUE)
+
+mtcars %>%  head() %>%  tt(.) %>%  style_tt(    i = 2:3,    j = c(1, 3, 4),
+    italic = TRUE,    bold = TRUE,    color = "orange",    font_size = 15  )
+```
+
+@tbl-TT-Eg6 - how cells can be formatted based on conditions using the `style_tt()` function. The first table shows how to style rows based on the value of the `cyl` column, while the second table shows how to style specific cells based on their row and column indices.
+
+
+
+
+### TT Eg7
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg7
+#| tbl-cap: "TT-Eg7"
+#| tbl-subcap:
+#|  - "TT-Eg7A"
+#|  - "TT-Eg7B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr)
+
+mtcars %>%  head() %>%  tt(.) %>%
+  style_tt(i = which(mtcars$mpg > 21), background = "lightblue", bold = TRUE)
+
+mtcars %>%  head() %>%  tt() %>%  style_tt(    i = which(mtcars$mpg > 21),    j = "mpg",
+    background = "lightblue",    bold = TRUE  )
+
+#mtcars %>% head() %>% tt(.) %>% style_tt( i = 2:3, j = c(1, 3, 4), italic = TRUE, bold=TRUE, color = "orange", font_size = 15)
+```
+
+
+@tbl-TT-Eg7 - how cells can be formatted based on conditions using the `style_tt()` function. 
+
+
+### TT Eg8
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TT-Eg8
+#| tbl-cap: "TT-Eg8"
+#| tbl-subcap:
+#|  - "TT-Eg8A"
+#|  - "TT-Eg8B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr)
+
+mtcars %>%
+  head() %>%
+  tt(theme = "empty") |>
+  style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
+  style_tt(i = 1, line = "t", line_color = "purple", line_width = 0.2) |>
+  style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
+
+mtcars %>%  head() %>%  tt(theme = "empty") |>  style_tt(
+    line = "tblr",    line_color = "white",    line_width = 0.5,
+    background = "lightblue",    color = "black"  )
+
+#mtcars %>% head() %>% tt(.) %>% style_tt( i = 2:3, j = c(1, 3, 4), italic = TRUE, bold=TRUE, color = "orange", font_size = 15)
+```
+Table @tbl-TT-Eg8 shows how to style the top and bottom lines of the table and how to style the entire table with a light blue background and black text color.
+
+
+### TT Eg9
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TT-Eg9
+#| tbl-cap: "TT-Eg9"
+#| tbl-subcap:
+#|  - "TT-Eg9A"
+#|  - "TT-Eg9B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr)
+
+mtcars %>%  head() %>%  mutate(ser = row_number()) %>%  select(ser, everything()) %>%
+  tt() |>  group_tt(i = list("Group-A" = 3, "Group-B" = 4, "Group-C" = 7))
+
+mtcars %>%  head() %>%  mutate(ser = row_number()) %>%  select(ser, everything()) %>%
+  tt() %>%  group_tt(    i = list("Before 1" = 0, "Before 3" = 3, "After 3" = 4, "After 5" = 6)  )
+```
+Above Table @tbl-TT-Eg9 shows how to display groups of rows in the table, while the second table @tbl-TT-Eg9 shows how to display groups of rows with custom labels.
+
+
+### TT Eg10
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg10
+#| tbl-cap: "TT-Eg10"
+#| tbl-subcap:
+#|  - "TT-Eg10A"
+#|  - "TT-Eg10B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- do.call(  rbind,  by(mtcars %>% select(gear, everything()), ~gear, head, n = 3))
+tmp %>%   tt(    caption = "Grouped by Gear",    notes = "This table shows the first 3 rows of mtcars grouped by the number of gears."  )
+
+tmp %>%  arrange(gear, mpg) %>%  tt() |>  group_tt(i = gear) |>  style_tt(align = "l") |>
+  style_tt(i = "groupi", align = "l", color = "teal", line = "b") |>  theme_typst()
+```
+
+Display rows in groups
+
+### TT Eg11
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg11
+#| tbl-cap: "TT-Eg11"
+#| tbl-subcap:
+#|  - "TT-Eg11A"
+#|  - "TT-Eg11B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- do.call(  rbind,  by(mtcars %>% select(gear, everything()), ~gear, head, n = 3))
+tmp %>%  arrange(gear, mpg) %>%
+  tt() |>  group_tt(i = gear) |>  style_tt(align = "l") |>
+  style_tt(i = "groupi", align = "l", color = "teal", line = "b") |>
+  style_tt("~groupi", j = 1, indent = 2) |>  theme_typst()
+
+df <- mtcars |> head() |> sort_by(~am)
+#df %>% gt()
+df |>  tt() |>  group_tt(i = df$am) |>  style_tt(align = "l") |>  style_tt(i = "groupi", align = "l", color = "teal", line = "b") |>  theme_typst()
+```
+
+```{=typst}
+#line(length: 80%, stroke: 1.5pt + blue)
+```
+
+
+### TT Eg12
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg12
+#| tbl-cap: "TT-Eg12"
+#| tbl-subcap:
+#|  - "TT-Eg12A"
+#|  - "TT-Eg12B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+rowmat <- matrix(colnames(mtcars))
+mtcars %>%  head(7) %>%  tt() |>  group_tt(i = c(3, 5), j = rowmat) |>
+  style_tt(    i = c(0, 3, 6),    background = "lightblue",    bold = TRUE  )
+
+rowmat <- matrix(c(rep("-", length(mtcars))))
+mtcars %>% head(7) %>% tt(theme = 'grid') |> group_tt(i = 3, j = rowmat)
+```
+table @tbl-TT-Eg12 we show how to insert row headings again at new positions or insert new characters in the row headings at new positions. The first table @tbl-TT-Eg12-1 shows how to insert row headings again at new positions, while the second table @tbl-TT-Eg12-2 shows how to insert new characters in the row headings at new positions.
+
+```{=typst}
+#line(length: 80%, stroke: 1.5pt + blue)
+```
+
+
+### TT Eg13
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg13
+#| tbl-cap: "TT-Eg13"
+#| tbl-subcap:
+#|  - "TT-Eg13A"
+#|  - "TT-Eg13B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+mtcars %>%  head() %>%  tt(theme = 'striped') %>%  group_tt(j = list("GA-1" = 2:3, "GA-2" = 5:7)) |>  group_tt(j = list("GB-1" = c(1, 2, 4), "GB-2" = 6:9)) |>  theme_rotate(i = 0, angle = 30) |>  theme_rotate(i = 1:4, j = 1, angle = 180)
+
+mtcars %>%  head(10) %>%  tt() %>%  theme_striped() %>%  theme_rotate(i = c(1, 3, 7), j = 3:5, angle = 45)
+
+#mtcars %>% head(10) %>% tt()
+```
+table @tbl-TT-Eg13 Main . First @tbl-TT-Eg13-2 shows how to insert new characters in the row headings at new positions and also rotate text at different angles. 
+
+
+### TT Eg14
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg14
+#| tbl-cap: "TT-Eg14"
+#| tbl-subcap:
+#|  - "TT-Eg14A"
+#|  - "TT-Eg14B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+dat <- data.frame(
+  Metric = c("Sales", "Conversion", "Growth", "Efficiency"),
+  Value = c(75, 45, 92, 38),
+  Percentage = c(0.75, 0.45, 0.92, 0.38)
+)
+
+tt(dat) |>  plot_tt(    j = 2,    fun = "bar",    data = as.list(dat$Value),    color = "darkorange"  ) |>  plot_tt(    j = 3,    fun = "bar",    data = as.list(dat$Percentage),    color = c("steelblue", "lightgrey"),    xlim = c(0, 1)  )
+
+carAvg <- mtcars %>%  group_by(gear) %>%  summarise(across(c(mpg, disp, hp), mean, .names = "avg_{col}"))
+
+#carAvg %>% gt()
+
+carAvg %>%  tt() |>  plot_tt(    j = 2,    fun = "bar",    data = as.list(carAvg$avg_mpg),    color = "darkorange"  ) |>  plot_tt(    j = 3,    fun = "bar",    data = as.list(carAvg$avg_disp),    color = c("steelblue", "lightgrey"),    xlim = c(0, 1)  ) |>  plot_tt(    j = 4,    fun = "bar",    data = as.list(carAvg$avg_hp),    color = c("steelblue", "lightgrey"),    xlim = c(0, 1)  )
+```
+table @tbl-TT-Eg14 show data in graphical representation using the `plot_tt()` function. The first table @tbl-TT-Eg14-1 shows how to plot bar charts for the `Value` and `Percentage` columns, while the second table @tbl-TT-Eg14-2 shows how to plot bar charts for the average `mpg`, `disp`, and `hp` values grouped by the number of gears.
+
+
+```{=typst}
+#line(length: 80%, stroke: 1.5pt + blue)
+```
+
+## Grouped Table Summaries
+
+
+### TT Eg15
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg15
+#| tbl-cap: "TT-Eg15"
+#| tbl-subcap:
+#|  - "TT-Eg15A"
+#|  - "TT-Eg15B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- mtcars %>%  select(mpg, cyl, gear, am) %>%  tibble::rownames_to_column("Car") %>%  arrange(gear, mpg) %>%  group_by(gear) %>%  mutate(gearGroup = paste0("Gear: ", gear, " | No. of Cars: ", n())) %>%  ungroup()
+
+tmp %>%  group_by(gearGroup) %>%  sample_n(2) %>%  tt(    width = c(1, 0.5, 0.5, 0.5, 0.5, 1),    height = 2,    caption = "Grouped by Gear",    notes = "This table shows the first 3 rows of mtcars grouped by the number of gears."  ) %>%  theme_striped()
+
+
+# Group labels and last row position of each group
+
+grp <- tmp %>% count(gearGroup, name = "n") %>% mutate(end = cumsum(n))
+grp %>% tt()
+
+##group_labels <- as.list(setNames(grp$end, grp$gearGroup))
+
+# Create table
+#tt(tmp) %>%  group_tt(i = group_labels) %>%  subset(select = -gearGroup) %>%  style_tt(align = "c") %>%  style_tt(i = "groupi", align = "l",  color = "teal", line = "b") %>%  theme_typst()
+```
+
+
+### TT Eg16
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg16
+#| tbl-cap: "TT-Eg16"
+#| tbl-subcap:
+#|  - "TT-Eg16A"
+#|  - "TT-Eg16B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- mtcars %>%  select(mpg, cyl, gear, am) %>%
+  tibble::rownames_to_column("Car") %>%  arrange(gear, mpg) %>%  group_by(gear) %>%
+  mutate(gearGroup = paste0("Gear: ", gear, " | No. of Cars: ", n())) %>%
+  ungroup()
+
+#tmp %>% group_by(gearGroup) %>% sample_n(2) %>% tt(width = c(1, 0.5, 0.5, 0.5, 0.5, 1), height = 2, caption = "Grouped by Gear", notes = "This table shows the first 3 rows of mtcars grouped by the number of gears.") %>% theme_striped()
+
+# Group labels and last row position of each group
+
+grp <- tmp %>% count(gearGroup, name = "n") %>% mutate(end = cumsum(n))
+
+print(grp)
+
+group_labels <- as.list(setNames(grp$end, grp$gearGroup))
+
+cat(grp$gearGroup, sep = "\n")
+
+# Create table
+#tmp %>% tt() %>%  group_tt(i = group_labels) %>%  subset(select = -gearGroup) %>%  style_tt(align = "c") %>%  style_tt(i = "groupi", align = "l",  color = "teal", line = "b") %>%  theme_typst()
+```
+
+```{=typst}
+#show block: set block(breakable: true)
+```
+
+### TT Eg17
+```{r}
+#| message: false
+#| layout-ncol: 2
+#| label: tbl-TT-Eg17
+#| tbl-cap: "TT-Eg17"
+#| tbl-subcap:
+#|  - "TT-Eg17A"
+#|  - "TT-Eg17B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- mtcars %>%  select(mpg, cyl, gear, am) %>%  tibble::rownames_to_column("Car") %>%  arrange(gear, mpg) %>%  group_by(gear) %>%  mutate(gearGroup = paste0("Gear: ", gear, " | No. of Cars: ", n())) %>%  ungroup()
+
+#tmp %>% group_by(gearGroup)  %>% tt(width = c(1, 0.2, 0.2, 0.2, 0.2, 1), height = 2, caption = "Grouped by Gear", notes = "This table shows the first 3 rows of mtcars grouped by the number of gears.") %>% theme_striped()
+
+# Group labels and last row position of each group
+
+grp <- tmp %>%
+  count(gearGroup, name = "n") %>%
+  mutate(start = cumsum(n) - n + 1, position = start - 1, end = cumsum(n) + 1)
+
+#grp
+group_labels1 <- as.list(setNames(grp$end, grp$gearGroup))
+group_labels2 <- as.list(setNames(grp$start, grp$gearGroup))
+
+# Create table
+tmp %>%  tt() %>%  group_tt(i = group_labels1) %>%  subset(select = -gearGroup) %>%  style_tt(align = "c") %>%  style_tt(i = "groupi", align = "l", color = "red", line = "b") %>%  theme_striped()
+
+tmp %>%  tt() %>%  group_tt(i = group_labels2) %>%  subset(select = -gearGroup) %>%  style_tt(align = "c") %>%  style_tt(i = "groupi", align = "l", color = "teal", line = "b") %>%  theme_typst()
+```
+The tables shows how to display groups of rows in the table, while the second table shows how to display groups of rows with custom labels.
+with typst unbreakable block, the table can be broken across pages if it is too long to fit on a single page. The `set block(breakable: true)` command allows the table to be broken across pages.
+The first tables shows group labels at the end of each group, while the second table shows group labels at the start of each group.
+
+### Caption Change
+
+```{=typst}
+#show figure.caption: set text(  fill: rgb("#8c2146"),  size: 10pt,  weight: "bold",)
+  ```
+
+### TT Eg18  : Most Popular
+
+```{r}
+#| message: false
+#| layout-nrow: 2
+#| label: tbl-TT-Eg18
+#| tbl-cap: "TT-Eg18"
+#| tbl-subcap:
+#|  - "TT-Eg18A"
+#|  - "TT-Eg18B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+tmp <- mtcars %>%  tibble::rownames_to_column("Car") %>%  arrange(gear, mpg)
+
+# Group summary
+grp <- tmp %>%  group_by(gear) %>%  summarise( n = n(), avgMPG = round(mean(mpg), 2),  avgWT = round(mean(wt), 2),  .groups = "drop"  ) %>%  mutate(  label = paste0( "Gear: ", gear,  " | Cars: ", n,  " | Avg MPG: ", avgMPG,  " | Avg WT: ", avgWT   ),  end = cumsum(n), start = cumsum(n) - n +1  )
+
+grp %>% tt() %>% style_tt(align = "c") %>% style_tt(i = 0, bold = TRUE, color = "teal", line = "b") %>%style_tt(background = "#EAF4F4") %>% theme_typst()
+
+
+group_labels <- as.list(setNames(grp$end - grp$n + 1, grp$label))
+
+# Generate tinytable
+tmp %>% mutate(ser= row_number()) %>%  select(ser, Car, gear, mpg, wt, everything()) %>% tt(width = c(0.4, 2.5, rep(0.7,11)), caption='Group Heading with more details', notes='Grouped by Gear')  %>% style_tt(font_size = 8) %>%   group_tt(i = group_labels) %>%  style_tt(align = "c") %>%  style_tt(    i = "groupi",    align = "l",    color = "teal",    line = "b"  ) %>% style_tt(j = 1:2, align = "l") %>% style_tt(j = 3:5, align = "r") %>%  style_tt(j = 6:11, align = "c") %>%  theme_grid() %>% style_tt(i = 0, background = "#006D77", color = "brown", bold = TRUE)%>%  style_tt(j = 1, background = "#D9EAF7")  %>% theme_typst()
+
+```
+Width can be defined in different ways in tt
+
+- Width can be defined as a single value, which will be applied to all columns.
+    - width = 1
+- Width can be defined as a vector of values, which will be applied to each column in the order they are specified.
+    - width = c(120, 45, 50, 50, rep(45, ncol(tmp) - 4)),
+    width = c(3, 1, 1, 1, rep(.8, ncol(tmp) - 4)),
+- Width can be defined as a vector of values with names, which will be applied to each column based on the column name.
+
+
+
+### TT Eg20 : Splitting Tables in 3 cols
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TT-Eg20
+#| tbl-cap: "TT-Eg20"
+#| tbl-subcap:
+#|  - "TT-Eg20A"
+#|  - "TT-Eg20B"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt, tidyr)
+
+df <- mtcars %>% tibble::rownames_to_column("Car") %>% select(Car, mpg, wt)
+
+nblock <- 3
+nrows <- ceiling(nrow(df) / nblock)
+
+df_wide <- df %>%  mutate(    block = ceiling(row_number() / nrows),    row = (row_number() - 1) %% nrows + 1  ) %>%  pivot_wider(    id_cols = row,    names_from = block,    values_from = c(Car, mpg, wt),    names_glue = "{.value}_{block}"  ) %>%  select(row, Car_1, mpg_1, wt_1, Car_2, mpg_2, wt_2, Car_3, mpg_3, wt_3) %>%  select(-row)
+
+tt(  df_wide,  caption = "Motor Cars: Three Side-by-Side Blocks",  width = rep(c(2, 1, 1), 3)) %>%  style_tt(align = "c") %>%  group_tt(j = list("GA-1" = 1:3, "GA-2" = 4:6, "GA-3" = 7:9)) %>%  theme_typst()
+```
+
+### TT Eg21 : Splitting Tables in 3 cols : Typst
+```{r}
+#| message: false
+#| label: tbl-TT-Eg21
+#| tbl-cap: "TT-Eg21"
+#| cap-location: bottom
+#| results: asis
+
+pacman::p_load(tinytable, dplyr, gt, tidyr)
+
+tmp2 <- mtcars %>%  mutate(ser = row_number()) %>%  tibble::rownames_to_column("Car") %>%  select(ser, Car, mpg, hp, wt, am)
+
+# Convert each row into Typst table cells
+cells <- apply(tmp2, 1, function(x) {
+  paste0("[", x, "]", collapse = ", ")
+})
+
+typst_code <- paste0(
+  "#columns(3, gutter: 10pt)[\n",
+  "#set text(size: 8pt)\n",
+  "#table(\n",
+  "columns: (0.6fr, 1.5fr, 1fr, 1fr, 1fr, 1fr),\n",
+  "inset: 3pt,\n",
+  "stroke: 0.3pt + gray.lighten(60%),\n",
+  "table.header([*Ser*], [*Car*], [*mpg*], [*hp*], [*wt*], [*am*]),\n",
+  paste(cells, collapse = ",\n"),
+  "\n)\n",
+  "]"
+)
+
+cat("```{=typst}\n", typst_code, "\n```\n", sep = "")
+```
+Note to include results: asis in the chunk options to ensure that the Typst code is rendered correctly in the output document.
+
+
+
+### TT Eg22 : Splitting Tables in x cols : Typst : B
+```{r}
+#| message: false
+#| label: tbl-TT-Eg22
+#| tbl-cap: "TT-Eg22"
+#| cap-location: bottom
+#| results: asis
+
+pacman::p_load(tinytable, dplyr, gt, tidyr)
+
+# User settings
+ncols <- 2
+font_size <- 7
+gutter <- 8
+
+# Prepare data
+tmp2 <- mtcars %>%  mutate(ser = row_number()) %>%  tibble::rownames_to_column("Car") %>%  select(ser, Car, mpg, hp, wt)
+
+# Split into consecutive groups of rows
+ncols <- max(1L, min(as.integer(ncols), nrow(tmp2)))
+rows_per_col <- ceiling(nrow(tmp2) / ncols)
+
+parts <- split(tmp2, ceiling(seq_len(nrow(tmp2)) / rows_per_col))
+
+# Convert text safely to Typst cells
+typst_cell <- function(x) {
+  x <- ifelse(is.na(x), "", as.character(x))
+  x <- gsub("\\\\", "\\\\\\\\", x)
+  x <- gsub("([\\[\\]#*])", "\\\\\\1", x)
+  paste0("[", x, "]")
+}
+
+# Create a Typst table for each part
+make_table <- function(df) {
+  headers <- paste(typst_cell(names(df)), collapse = ", ")
+
+  rows <- apply(as.matrix(df), 1, function(x) {
+    paste(typst_cell(x), collapse = ", ")
+  })
+
+  paste0(
+    "table(\n",
+    "columns: (0.5fr, 2fr, 0.7fr, 0.7fr, 0.7fr),\n",
+    "inset: 2pt,\n",
+    "stroke: 0.3pt + gray.lighten(60%),\n",
+    "table.header(",
+    headers,
+    "),\n",
+    paste(rows, collapse = ",\n"),
+    "\n)"
+  )
+}
+
+# Generate grid dynamically
+typst_code <- paste0(
+  "#{\n",
+  "set text(size: ",
+  font_size,
+  "pt)\n",
+  "grid(\n",
+  "columns: (",
+  paste(rep("1fr", length(parts)), collapse = ", "),
+  "),\n",
+  "gutter: ",
+  gutter,
+  "pt,\n",
+  paste(vapply(parts, make_table, character(1)), collapse = ",\n"),
+  "\n)\n",
+  "}"
+)
+
+cat("```{=typst}\n", typst_code, "\n```\n", sep = "")
+```
+
+## Extra Tables
+
+### TE- 1 : Highlight entire rows where mpg > 21
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-1
+#| tbl-cap: "TE-1"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+
+df <- mtcars %>%
+  tibble::rownames_to_column("Car") %>%
+  select(Car, mpg, cyl, hp, wt, gear) %>%
+  head(12)
+
+df %>%  tt() %>%  style_tt(    i = which(df$mpg > 21),    background = "lightblue",    color = "darkblue",    bold = TRUE  )
+```
+
+### TE2. Different colours for high, medium and low mpg
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-2
+#| tbl-cap: "TE-2"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+df %>%  tt() %>%  style_tt(    i = which(df$mpg >= 25),    j = "mpg",    background = "lightgreen",    color = "darkgreen",    bold = TRUE  ) %>%  style_tt(    i = which(df$mpg >= 18 & df$mpg < 25),    j = "mpg",    background = "lightyellow",    color = "darkorange"  ) %>%  style_tt(    i = which(df$mpg < 18),    j = "mpg",    background = "mistyrose",    color = "darkred",    bold = TRUE  )
+
+```
+
+### T3. Colour cells in two different columns based on their own values
+
+Here, mpg is coloured according to fuel efficiency, while hp is coloured according to horsepower.
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-3
+#| tbl-cap: "TE-3"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+
+df %>%  tt() %>%  style_tt(    i = which(df$mpg > 21),    j = "mpg",    background = "lightgreen",    color = "darkgreen"  ) %>%  style_tt(    i = which(df$hp > 150),    j = "hp",    background = "lightpink",    color = "darkred",    bold = TRUE  )
+
+```
+
+### TE4. Highlight maximum and minimum values
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-4
+#| tbl-cap: "TE-4"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+
+df %>%  tt() %>%  style_tt(    i = which(df$mpg == max(df$mpg)),    j = "mpg",    background = "lightgreen",    bold = TRUE  ) %>%  style_tt(    i = which(df$mpg == min(df$mpg)),    j = "mpg",    background = "salmon",    color = "white",    bold = TRUE  )
+
+```
+
+### T#5. Highlight values above and below the average
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-5
+#| tbl-cap: "TE-5"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+
+avg_mpg <- mean(df$mpg)
+
+df %>%  tt() %>%  style_tt(    i = which(df$mpg >= avg_mpg),    j = "mpg",    background = "#D1FAE5",    color = "#065F46"  ) %>%  style_tt(    i = which(df$mpg < avg_mpg),    j = "mpg",    background = "#FEE2E2",    color = "#991B1B"  )
+```
+
+### TE6. Apply a continuous colour gradient to cells
+
+Instead of only three categories, create a different background colour for each mpg value.
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TE-6
+#| tbl-cap: "TE-6"
+#| cap-location: bottom
+
+library(tinytable)
+library(dplyr)
+
+
+df2 <- mtcars %>%  tibble::rownames_to_column("Car") %>%  select(Car, mpg, hp, wt) %>%  head(12)
+
+pal <- scales::col_numeric(  palette = c("#FEE2E2", "#FEF08A", "#86EFAC"), domain = range(df2$mpg))
+
+bg_colors <- pal(df2$mpg)
+
+tab <- tt(df2)
+
+for (k in seq_len(nrow(df2))) {
+  tab <- style_tt(    tab,    i = k,    j = "mpg",    background = bg_colors[k],    color = "#111827"  )}
+
+tab
+```
+
+
+```{r}
+#| label: tbl-mpg-conditional
+#| tbl-cap: "Conditional Formatting of Fuel Efficiency"
+#| echo: false
+#| message: false
+
+df %>%   tt() %>%  style_tt(    i = which(df$mpg > 21),    j = "mpg",    background = "lightgreen",    color = "darkgreen",    bold = TRUE  ) %>%  theme_typst()
+```
+
+See @tbl-mpg-conditional for the fuel-efficiency comparison.
+
+
+## TT Eg- Blank
+
+```{r}
+#| message: false
+#| layout-ncol: 1
+#| label: tbl-TT-Egxxxx
+#| tbl-cap: "TT-EgBlank"
+#| tbl-subcap:
+#|  - "TT-EgxxxA"
+#|  - "TT-EgxxxB"
+#| cap-location: bottom
+
+pacman::p_load(tinytable, dplyr, gt)
+
+#mtcars %>% head() %>% select(1:5) %>% tt()
+
+```
+Table @tbl-TT-Egxxxx is a blank template section for adding a new tinytable example.
+
+\newpage
+
+## TOC- Repeat
+```{=typst}
+//#pagebreak()
+#outline(title: [Sections],  target: heading,  depth: 1)
+#outline(title: [Figures], target: figure.where(kind: "quarto-float-fig"))
+#outline(title: [Tables],target: figure.where(kind: "quarto-float-tbl"))
+
+```
