@@ -1,0 +1,55 @@
+---
+title: "A Data Science Report"
+subtitle: "A Quarto and Typst starter"
+format: typst
+execute:
+  warning: false
+---
+
+## Overview
+
+This example uses a small, reproducible dataset to demonstrate a typical data
+science report workflow: prepare data, summarize it, and communicate a result.
+Replace the example values and analysis with your own.
+
+## Data and analysis
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary of the example measurements"
+
+import pandas as pd
+
+measurements = pd.DataFrame(
+    {
+        "group": ["A", "A", "A", "B", "B", "B"],
+        "value": [12, 15, 14, 18, 17, 20],
+    }
+)
+
+summary = measurements.groupby("group", as_index=False)["value"].agg(
+    count="count",
+    mean="mean",
+)
+summary
+```
+
+The mean measurement is higher in group B in this example. The sample is
+intentionally small and illustrative; it does not support broader conclusions.
+
+## Visualization
+
+```{python}
+#| label: fig-measurements
+#| fig-cap: "Measurements by group"
+
+import matplotlib.pyplot as plt
+
+measurements.boxplot(column="value", by="group")
+plt.title("Measurements by group")
+plt.suptitle("")
+plt.xlabel("Group")
+plt.ylabel("Measurement")
+plt.tight_layout()
+plt.show()
+```
